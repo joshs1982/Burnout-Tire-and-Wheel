@@ -1,27 +1,30 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
 const app = express();
+const PORT = 3000;
+
 app.use(cors());
 app.use(bodyParser.json());
 
-// POST /api/shipping
+// Shipping API
 app.post('/api/shipping', (req, res) => {
   const { zip, items } = req.body;
 
-  if (!zip || !items) return res.status(400).json({ error: 'Missing data' });
+  if (!items || items.length === 0) {
+    return res.json({ usps: "0.00", ups: "0.00", fedex: "0.00" });
+  }
 
-  // Dummy calculation: $5 + $0.5 per lb per item
-  const totalWeight = items.reduce((sum, i) => sum + i.weight * i.qty, 0);
-  const rates = {
-    usps: (5 + totalWeight * 0.5).toFixed(2),
-    ups: (7 + totalWeight * 0.55).toFixed(2),
-    fedex: (6 + totalWeight * 0.6).toFixed(2)
-  };
+  // Calculate total weight
+  const totalWeight = items.reduce((sum, item) => sum + (item.weight || 0) * (item.qty || 1), 0);
 
-  res.json(rates);
+  // Example shipping formulas
+  const usps = (5 + totalWeight * 1.5).toFixed(2);
+  const ups = (10 + totalWeight * 2).toFixed(2);
+  const fedex = (12 + totalWeight * 2.5).toFixed(2);
+
+  res.json({ usps, ups, fedex });
 });
 
-app.listen(3000, () => console.log('Shipping API running on port 3000'));
+app.listen(PORT, () => console.log(`Shipping server running on http://localhost:${PORT}`));

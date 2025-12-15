@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burnout Tire and Wheel</title>
+<style>
+/* GLOBAL */
+*{box-sizing:border-box;}
+body,html{margin:0;padding:0;font-family:Arial,sans-serif;background:#f8f8f8;}
+
+/* HEADER */
+.header-logo-section{background:#111;text-align:center;padding:20px;}
+.header-logo-section .logo{max-width:100%;height:200px;object-fit:contain;}
+
+/* NAVBAR */
+.navbar-section{background:black;position:relative;}
+nav{max-width:1200px;margin:0 auto;}
+nav ul{list-style:none;margin:0;padding:0;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;}
+nav ul li{position:relative;}
+nav ul li a{color:white;text-decoration:none;margin:0 15px;font-weight:bold;padding:12px 15px;display:block;}
+nav ul li:hover > a{background-color:#222;border-radius:4px;}
+.menu-toggle{display:none;cursor:pointer;font-size:24px;color:white;position:absolute;right:20px;top:20px;}
+@media (max-width:768px){nav ul{flex-direction:column;display:none;width:100%;text-align:center;}nav ul.show{display:flex;}nav ul li{width:100%;}.menu-toggle{display:block;margin-bottom:10px;}}
+
+/* HERO */
+.hero{text-align:center;padding:20px 20px 40px 20px;background:#222;color:#fff;}
+.hero h1{font-size:48px;margin:0;}
+.hero p{font-size:20px;margin:10px 0 20px;}
+.hero .btn{padding:12px 24px;background:#e60000;color:white;text-decoration:none;border-radius:5px;font-weight:bold;font-size:18px;}
+
+/* SECTION LABEL */
+.sectionLable{text-align:center;margin:0 auto;background:red;color:white;padding:10px 0;}
+.sectionLable h1{font-size:38px;margin:0;}
+
+/* PRODUCTS */
+.products{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;padding:20px;}
+.product-card{background:#e2e1e1;border:1px solid #ddd;border-radius:8px;text-align:center;display:flex;flex-direction:column;width:250px;padding:10px;}
+.product-card img{width:100%;border:1px solid #ddd;border-radius:4px;margin:0 auto 0 auto;background:#fff;}
+.product-card h3{font-size:18px;margin:15px 0 5px;}
+.product-card p.description{flex-grow:1;margin:5px 10px 10px;color:#333;font-size:14px;}
+.product-card p.price{font-weight:bold;margin:0 0 10px;font-size:16px;}
+.product-card select,.product-card input{margin-bottom:8px;padding:6px;width:100%;}
+.product-card .btn{padding:10px;background:#e60000;color:white;text-decoration:none;border-radius:4px;font-weight:bold;font-size:16px;cursor:pointer;}
+
+/* CART PANEL */
+#cart-panel{position:fixed;top:0;right:-420px;width:420px;height:100%;background:#fff;box-shadow:-2px 0 8px rgba(0,0,0,.2);transition:.3s;z-index:10000;display:flex;flex-direction:column;}
+#cart-panel.show{right:0;}
+#cart-panel h2{margin:20px;}
+#cart-items{flex-grow:1;overflow-y:auto;padding:0 20px;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;border-bottom:1px solid #ddd;padding-bottom:10px;}
+.cart-item img{width:50px;height:50px;object-fit:cover;border-radius:4px;}
+.cart-item-info{flex-grow:1;margin-left:10px;}
+.cart-item-info h4{margin:0 0 5px 0;font-size:14px;}
+.cart-item-info p{margin:0;font-size:14px;}
+.cart-item input.qty-cart{width:50px;margin-right:5px;}
+.cart-item button{background:red;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;}
+#cart-total{padding:10px 20px;font-weight:bold;border-top:1px solid #ddd;}
+#cart-close{position:absolute;top:10px;right:10px;background:red;color:white;border:none;font-size:18px;padding:5px 10px;cursor:pointer;border-radius:4px;}
+.checkoutButton{width: auto;margin: 20px;margin-top: 0px;padding: 10px;}
+
+/* FOOTER */
+.footer-section{background:#111;padding:20px 0;}
+footer{color:#888;text-align:center;font-size:14px;}
+footer a{color:#ccc;text-decoration:none;margin:0 8px;}
+</style>
+</head>
+<body>
+
+<!-- HEADER LOGO -->
+<section class="header-logo-section">
+  <img src="https://i.ibb.co/x8hkFWmn/Gemini-Generated-Image-zocmszocmszocmsz-Photoroom-1-Photoroom.png" class="logo">
+</section>
+
+<!-- NAVBAR -->
+<section class="navbar-section">
+  <span class="menu-toggle" onclick="toggleMenu()">☰</span>
+  <nav>
+    <ul id="nav-menu">
+      <li><a href="#products">Products</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#" onclick="toggleCart()">Cart 🛒</a></li>
+    </ul>
+  </nav>
+</section>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Premium Tires & Wheels for Your Ride</h1>
+  <p>Price Match Guarantee! On New Tires or Wheels.</p>
+  <a href="#products" class="btn">Shop Now</a>
+</section>
+
+<!-- TIRES SECTION -->
+<section class="sectionLable"><h1>ATV/UTV Tires</h1></section>
+<section class="products">
+<!-- Kenda Executioner -->
+<div class="product-card">
+    <img src="https://powersports.kendatire.com/media/466007/k538.jpg" alt="Kenda Executioner">
+    <h3>Kenda Executioner</h3>
+    <p class="description">Designed to meet the demands of the muddiest 4x4 riding terrain.</p>
+    <select class="size-select" onchange="updatePrice(this)">
+        <option value="131.25" data-weight="9.48" data-length="24" data-width="8" data-height="24">25x8-12</option>
+        <option value="126.88" data-weight="12.72" data-length="25" data-width="10" data-height="25">25x10-12</option>
+        <option value="153.12" data-weight="13.09" data-length="26" data-width="10" data-height="26">26x10-12</option>
+        <option value="153.12" data-weight="15.39" data-length="26" data-width="12" data-height="26">26x12-12</option>
+        <option value="153.12" data-weight="14.32" data-length="27" data-width="10" data-height="27">27x10-12</option>
+        <option value="140.00" data-weight="16.01" data-length="27" data-width="12" data-height="27">27x12-12</option>
+        <option value="183.75" data-weight="12.54" data-length="28" data-width="9" data-height="28">28x9-14</option>
+        <option value="183.75" data-weight="14.72" data-length="28" data-width="11" data-height="28">28x11-14</option>
+    </select>
+    <input type="number" class="quantity-input" value="1" min="1" onchange="updatePrice(this)">
+    <p class="price">131.25</p>
+    <a href="#" class="btn" onclick="addToCart(this)">Add to Cart</a>
+</div>
+</section>
+
+<!-- WHEELS SECTION -->
+<section class="sectionLable"><h1>ATV/UTV Wheels</h1></section>
+<section class="products">
+<div class="product-card">
+  <img src="https://www.itptires.com/wp-content/uploads/2024/04/ca92fd78049120da4bec93d711b57b3115bf2fec_ITP_inertia_wheel_4lug_bronze_black_ring_lay_tr-300x300.png" alt="ITP Inertia Beadlock">
+  <h3>ITP Inertia® Beadlock</h3>
+  <p class="description">Extreme-duty beadlock wheel with Rock Armor inner lip protection.</p>
+
+  <label>Size:</label>
+  <select class="size-select" onchange="updatePrice(this)">
+    <option value="225.00">14x7 ($225.00)</option>
+    <option value="262.50">15x7 ($262.50)</option>
+  </select>
+
+  <label>Finish:</label>
+  <select class="finish-select" onchange="updatePrice(this)">
+    <option value="15">Bronze (+$15)</option>
+    <option value="0">Black/Machined</option>
+  </select>
+
+  <label>Bolt Pattern:</label>
+  <select class="bolt-select" onchange="updatePrice(this)">
+    <option value="0">4/137</option>
+    <option value="0">4/156</option>
+  </select>
+
+  <label>Qty:</label>
+  <input type="number" class="quantity-input" value="1" min="1" onchange="updatePrice(this)">
+  <p class="price">225.00</p>
+  <a href="#" class="btn" onclick="addToCart(this)">Add to Cart</a>
+</div>
+</section>
+
+<!-- CART PANEL -->
+<div id="cart-panel">
+  <button id="cart-close" onclick="toggleCart()">×</button>
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <div id="cart-total">Total: $0.00</div>
+  <button class="checkoutButton" onclick="checkoutCart()">Checkout with PayPal</button>
+  <div id="paypal-button-container"></div>
+</div>
+
+<!-- FOOTER -->
+<section class="footer-section">
+<footer>
+  <p>&copy; 2025 Burnout Tire and Wheel · <a href="#privacy">Privacy Policy</a> · <a href="#terms">Terms</a></p>
+</footer>
+</section>
+
+<!-- PAYPAL SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AQGZVB6Ke6hzCiNW-O-1RAMJyn5RREHrfYAE0Z8eo13hkaLTAAo0QbTMBMbQnP-2fobMMlfy6w-xBIaZ&currency=USD"></script>
+
+<script>
+// Full cart + shipping JS (includes dynamic shipping)
+let cart = [];
+function toggleMenu() { document.getElementById('nav-menu').classList.toggle('show'); }
+function toggleCart() { document.getElementById('cart-panel').classList.toggle('show'); }
+function updatePrice(el) {
+  const card = el.closest('.product-card');
+  const size = parseFloat(card.querySelector('.size-select')?.value || 0);
+  const finish = parseFloat(card.querySelector('.finish-select')?.value || 0);
+  const bolt = parseFloat(card.querySelector('.bolt-select')?.value || 0);
+  const qty = parseInt(card.querySelector('.quantity-input')?.value || 1);
+  card.querySelector('.price').innerText = ((size + finish + bolt) * qty).toFixed(2);
+}
+function initializePrices() { document.querySelectorAll('.product-card').forEach(c=>{if(c.querySelector('.quantity-input'))c.querySelector('.quantity-input').value=1; if(c.querySelector('.size-select'))c.querySelector('.size-select').selectedIndex=0; if(c.querySelector('.finish-select'))c.querySelector('.finish-select').selectedIndex=0; if(c.querySelector('.bolt-select'))c.querySelector('.bolt-select').selectedIndex=0; updatePrice(c); }); }
+function addToCart(btn) {
+  const card = btn.closest('.product-card');
+  const name = card.querySelector('h3').innerText;
+  const img = card.querySelector('img').src;
+  const sizeOption = card.querySelector('.size-select')?.selectedOptions[0];
+  const finishOption = card.querySelector('.finish-select')?.selectedOptions[0];
+  const boltOption = card.querySelector('.bolt-select')?.selectedOptions[0];
+  const qty = parseInt(card.querySelector('.quantity-input')?.value || 1);
+  const price = parseFloat(card.querySelector('.price').innerText);
+  const item = {name,img,size:sizeOption?.text||'',finish:finishOption?.text||'',bolt:boltOption?.text||'',qty,price,weight:parseFloat(sizeOption?.dataset.weight||0),length:parseFloat(sizeOption?.dataset.length||0),width:parseFloat(sizeOption?.dataset.width||0),height:parseFloat(sizeOption?.dataset.height||0)};
+  const existing = cart.find(i=>i.name===item.name&&i.size===item.size&&i.finish===item.finish&&i.bolt===item.bolt);
+  if(existing)existing.qty+=qty; else cart.push(item);
+  updateCart(); toggleCart();
+}
+function removeFromCart(index){cart.splice(index,1);updateCart();}
+function changeCartQty(index,newQty){newQty=parseInt(newQty);if(newQty<1)newQty=1;cart[index].qty=newQty;updateCart();}
+async function calculateShipping(){
+  if(cart.length===0)return{usps:0,ups:0,fedex:0};
+  const packages=cart.map(i=>({weight:i.weight*i.qty,length:i.length,width:i.width,height:i.height}));
+  try{
+    const res=await fetch("http://localhost:3000/rates",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({zip:"72076",packages})});
+    const data=await res.json();
+    return{usps:parseFloat(data.usps)||0,ups:parseFloat(data.ups)||0,fedex:parseFloat(data.fedex)||0};
+  }catch(err){console.error("Shipping error",err);return{usps:0,ups:0,fedex:0};}
+}
+async function updateCart(){
+  const wrap=document.getElementById('cart-items');wrap.innerHTML='';let subtotal=0;
+  cart.forEach((item,i)=>{subtotal+=item.price;wrap.innerHTML+=`<div class="cart-item"><img src="${item.img}"><div class="cart-item-info"><h4>${item.name} (${item.size} / ${item.finish} / ${item.bolt})</h4><p>$${(item.price/item.qty).toFixed(2)} x ${item.qty}</p><input type="number" value="${item.qty}" min="1" onchange="changeCartQty(${i},this.value)"></div><button onclick="removeFromCart(${i})">×</button></div>`;});
+  const shipping=await calculateShipping(); const shippingTotal=Math.min(shipping.usps,shipping.ups,shipping.fedex);
+  const total=subtotal+shippingTotal;
+  wrap.innerHTML+=`<p>Shipping Options:</p><ul><li>USPS: $${shipping.usps.toFixed(2)}</li><li>UPS: $${shipping.ups.toFixed(2)}</li><li>FedEx: $${shipping.fedex.toFixed(2)}</li></ul>`;
+  document.getElementById('cart-total').innerText=`Subtotal: $${subtotal.toFixed(2)} + Shipping: $${shippingTotal.toFixed(2)} = Total: $${total.toFixed(2)}`;
+  window.cartTotal=total;
+}
+function checkoutCart(){
+  if(cart.length===0){alert("Cart is empty");return;}
+  paypal.Buttons({
+    createOrder:async(a,e)=>{
+      const shipping=await calculateShipping();
+      const shippingTotal=Math.min(shipping.usps,shipping.ups,shipping.fedex);
+      const items=cart.map(i=>({name:i.name+` (${i.size} / ${i.finish} / ${i.bolt})`,unit_amount:{value:(i.price/i.qty).toFixed(2),currency_code:"USD"},quantity:i.qty.toString()}));
+      const subtotal=items.reduce((s,i)=>s+parseFloat(i.unit_amount.value)*parseInt(i.quantity),0);
+      const total=subtotal+shippingTotal;
+      return e.order.create({purchase_units:[{amount:{currency_code:"USD",value:total.toFixed(2),breakdown:{item_total:{currency_code:"USD",value:subtotal.toFixed(2)},shipping:{currency_code:"USD",value:shippingTotal.toFixed(2)}}},items:items}]});
+    },
+    onApprove:(data,e)=>{return e.order.capture().then(()=>{alert("Payment Successful!");cart=[];updateCart();toggleCart();initializePrices();});}
+  }).render('#paypal-button-container');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{initializePrices();});
+</script>
+</body>
+</html>
+

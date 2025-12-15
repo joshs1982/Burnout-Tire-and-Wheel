@@ -1,52 +1,54 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import axios from "axios";
-import xml2js from "xml2js";
+import express from 'express';
+import cors from 'cors';
 
-dotenv.config();
+const app = express();
+const PORT = 3000;
 
-const app=express();
+// Enable CORS so your frontend can fetch
 app.use(cors());
 app.use(express.json());
 
-app.post("/rates", async(req,res)=>{
-  const {zip,packages}=req.body;
-  if(!zip || !packages) return res.status(400).json({error:"Missing data"});
-
-  try{
-    const totalWeight=packages.reduce((sum,p)=>sum+p.weight,0);
-
-    const uspsXML=`<RateV4Request USERID="${process.env.USPS_USERID}">
-      <Revision>2</Revision>
-      <Package ID="1ST">
-        <Service>PRIORITY</Service>
-        <ZipOrigination>72076</ZipOrigination>
-        <ZipDestination>${zip}</ZipDestination>
-        <Pounds>${Math.floor(totalWeight)}</Pounds>
-        <Ounces>${((totalWeight-Math.floor(totalWeight))*16).toFixed(1)}</Ounces>
-        <Container>VARIABLE</Container>
-        <Size>REGULAR</Size>
-      </Package>
-    </RateV4Request>`;
-
-    const uspsResponse=await axios.get("https://secure.shippingapis.com/ShippingAPI.dll",{params:{API:"RateV4",XML:uspsXML}});
-    const parsed=await xml2js.parseStringPromise(uspsResponse.data);
-    let uspsRate=0;
-    try{uspsRate=parseFloat(parsed.RateV4Response.Package[0].Postage[0].Rate[0]);}catch(e){uspsRate=0;}
-
-    const upsRate=totalWeight*2.5;
-    const fedexRate=totalWeight*2.8;
-
-    res.json({usps:uspsRate,ups:parseFloat(upsRate.toFixed(2)),fedex:parseFloat(fedexRate.toFixed(2))});
-  }catch(err){console.error(err); res.status(500).json({error:"Error fetching rates"});}
+// Test route
+app.get('/', (req, res) => {
+  res.send('Server is running!');
 });
 
-app.listen(3000,()=>console.log("Shipping API running on port 3000"));
+// Shipping endpoint
+app.post('/api/shipping', async (req, res) => {
+  try {
+    const { zip, items } = req.body;
 
-    res.status(500).json({ error: "Error fetching rates" });
+    if (!zip || !items || !Array.isArray(items)) {
+      return res.status(400).json({ error: 'Invalid payload' });
+    }
+
+    console.log('Shipping request received:');
+    console.log('ZIP:', zip);
+    console.log('Items:', items);
+
+    // TEMP: Fake shipping rates (replace with real API later)
+    const shippingRates = {
+      usps: 10.00 + calculateWeight(items) * 1.5,
+      ups: 12.50 + calculateWeight(items) * 2.0,
+      fedex: 15.75 + calculateWeight(items) * 2.5
+    };
+
+    res.json(shippingRates);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Shipping API error' });
   }
 });
 
-app.listen(3000, () => console.log("Shipping API running on port 3000"));
+// Helper to calculate total weight
+function calculateWeight(items) {
+  return items.reduce((sum, i) => sum + (i.weight || 0) * (i.qty || 1), 0);
+}
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
+
 
